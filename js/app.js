@@ -3,6 +3,75 @@
 
   const $screen = $('#screen');
 
+  const multiply = function(arr) {
+    const num = arr.indexOf('x');
+    const prod = arr[num - 1] * arr[num + 1];
+
+    return arr.slice(0, num - 1).concat(prod.toPrecision(12).toString(), ...arr.slice(num + 2, arr.length));
+  };
+
+  const divide = function(arr) {
+    const num = arr.indexOf('÷');
+    const prod = (arr[num - 1] / arr[num + 1]).toPrecision(12);
+
+    return arr.slice(0, num - 1).concat(prod.toString(), ...arr.slice(num + 2, arr.length));
+  };
+
+  const multDiv = function(arr) {
+    let newArr = arr;
+
+    if (!newArr.includes('x') && !newArr.includes('÷')) {
+      return newArr;
+    }
+
+    if (arr.indexOf('÷') > 0 && arr.indexOf('x') > 0) {
+      if (arr.indexOf('÷') > arr.indexOf('x')) {
+        newArr = multiply(arr);
+      } else {
+        newArr = divide(arr);
+      }
+    } else {
+      if (arr.indexOf('x') > 0) {
+        newArr = multiply(arr);
+      } else {
+        newArr = divide(arr);
+      }
+    }
+
+    return multDiv(newArr);
+  };
+
+  const arithmetic = function(string) {
+    const arr = multDiv(string.split(' '));
+    let num = parseFloat(arr.shift(), 10);
+
+    for (let i = 0; i < arr.length; i += 2) {
+      switch (arr[i]) {
+        case '+':
+          num += parseFloat(arr[i + 1], 10);
+          break;
+        case '-':
+          num -= parseFloat(arr[i + 1], 10);
+          break;
+        default:
+      }
+    }
+
+    return num;
+  };
+
+  const calculate = function(string) {
+    while (string.includes('(')) {
+      const pths = string.match(/\(.[^\(\)]+\)/);
+      const inside = pths[0].slice(1, -1);
+      const calcRes = arithmetic(inside);
+
+      string = string.replace(pths[0], calcRes);
+    }
+
+    return arithmetic(string);
+  };
+
   $('body').on('keydown', () => {
     if (event.which === 27) {
       $screen.val('');
@@ -60,77 +129,7 @@
     $screen.val($screen.val() + $(event.target).text());
   });
 
-  const calculate = function(string) {
-    while (string.includes('(')) {
-      const pths = string.match(/\(.[^\(\)]+\)/);
-      const inside = pths[0].slice(1, -1);
-      const calcRes = arithmetic(inside);
-
-      string = string.replace(pths[0], calcRes);
-    }
-
-    return arithmetic(string);
-  };
-
-  const arithmetic = function(string) {
-    const arr = multDiv(string.split(' '));
-    let num = parseFloat(arr.shift(), 10);
-
-    for (let i = 0; i < arr.length; i += 2) {
-      switch (arr[i]) {
-        case '+':
-          num += parseFloat(arr[i + 1], 10);
-          break;
-        case '-':
-          num -= parseFloat(arr[i + 1], 10);
-          break;
-      }
-    }
-
-    return num;
-  };
-
-  const multDiv = function(arr) {
-    let newArr = arr;
-
-    if (!newArr.includes('x') && !newArr.includes('÷')) {
-
-      return newArr;
-    }
-
-    if (arr.indexOf('÷') > 0 && arr.indexOf('x') > 0) {
-      if (arr.indexOf('÷') > arr.indexOf('x')) {
-        newArr = multiply(arr);
-      } else {
-        newArr = divide(arr);
-      }
-    } else {
-      if (arr.indexOf('x') > 0) {
-        newArr = multiply(arr);
-      } else {
-        newArr = divide(arr);
-      }
-    }
-
-    return multDiv(newArr);
-  };
-
-  const multiply = function(arr) {
-    const num = arr.indexOf('x');
-    const prod = arr[num - 1] * arr[num + 1];
-
-    return arr.slice(0, num - 1).concat(prod.toPrecision(12).toString(), ...arr.slice(num + 2, arr.length));
-  };
-
-  const divide = function(arr) {
-    const num = arr.indexOf('÷');
-    const prod = arr[num - 1] / arr[num + 1];
-
-    return arr.slice(0, num - 1).concat(prod.toPrecision(12).toString(), ...arr.slice(num + 2, arr.length));
-  };
-
   // const validate = function (string) {
   //
   // }
-
 })();
