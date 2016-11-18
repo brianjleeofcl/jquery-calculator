@@ -112,5 +112,9 @@
     return arr.slice(0, n-1).concat(p.toPrecision(12).toString(), ...arr.slice(n + 2, arr.length))
   }
 
+  console.log(" 5"*"4 ");
+  // const validate = function (string) {
+  //
+  // }
 
 })();
