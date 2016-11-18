@@ -4,11 +4,11 @@
   const $screen = $('#screen')
 
   $('body').on('keydown', () => {
-    if (event.key === 'Escape'){
+    if (event.which === 27){
       $screen.val("");
       return;
     }
-    if (event.key === 'Enter'){
+    if (event.which === 13){
       const answer = calculate($screen.val());
       if (Number.isNaN(answer)){
         $screen.val("error!")
@@ -33,12 +33,21 @@
       }
       return;
     }
-
+    if($(event.target).attr('id')==='neg') {
+      if ($screen.val().match(/\d+(?=\D)*$/) !== null) {
+        const newVal = $screen.val().replace(/(\d+(?=\D)*$)/, '-$1');
+        $screen.val(newVal);
+        return;
+      }
+    }
     if ($(event.target).hasClass('operator')) {
       $screen.val($screen.val()+" ")
     }
     if (['+', '-', 'x', '÷'].includes($screen.val()[$screen.val().length - 1])) {
       $screen.val($screen.val()+" ")
+    }
+    if ($screen.val().endsWith('±')) {
+      $screen.val($screen.val().replace('±','-'))
     }
     $screen.val($screen.val() + $(event.target).text())
   })
@@ -55,7 +64,6 @@
 
   const arithmetic = function (string) {
     const arr = multDiv(string.split(' '))
-    console.log(arr);
     let num = parseFloat(arr.shift(), 10)
     for (let i=0;i<arr.length; i += 2) {
       switch (arr[i]) {
@@ -78,26 +86,30 @@
 
     if (arr.indexOf('÷') > 0 && arr.indexOf('x') > 0) {
       if (arr.indexOf('÷') > arr.indexOf('x')) {
-        const n = arr.indexOf('x')
-        const p = arr[n - 1] * arr[n + 1]
-        newArr = arr.slice(0, n-1).concat(p.toPrecision(12).toString(),...arr.slice(n+2, arr.length))
+        newArr = multiply(arr)
       } else {
-        const n = arr.indexOf('÷')
-        const p = arr[n - 1] / arr[n + 1]
-        newArr = arr.slice(0, n-1).concat(p.toPrecision(12).toString(), ...arr.slice(n + 2, arr.length))
+        newArr = divide(arr)
       }
     } else {
       if (arr.indexOf('x') > 0) {
-        const n = arr.indexOf('x')
-        const p = arr[n - 1] * arr[n + 1]
-        newArr = arr.slice(0, n-1).concat(p.toPrecision(12).toString(),...arr.slice(n+2, arr.length))
+        newArr = multiply(arr)
       } else {
-        const n = arr.indexOf('÷')
-        const p = arr[n - 1] / arr[n + 1]
-        newArr = arr.slice(0, n-1).concat(p.toPrecision(12).toString(), ...arr.slice(n + 2, arr.length))
+        newArr = divide(arr)
       }
     }
     return multDiv(newArr)
+  }
+
+  const multiply = function (arr) {
+    const n = arr.indexOf('x')
+    const p = arr[n - 1] * arr[n + 1]
+    return arr.slice(0, n-1).concat(p.toPrecision(12).toString(),...arr.slice(n+2, arr.length))
+  }
+
+  const divide = function (arr) {
+    const n = arr.indexOf('÷')
+    const p = arr[n - 1] / arr[n + 1]
+    return arr.slice(0, n-1).concat(p.toPrecision(12).toString(), ...arr.slice(n + 2, arr.length))
   }
 
 
