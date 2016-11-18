@@ -80,21 +80,21 @@
       if (arr.indexOf('÷') > arr.indexOf('x')) {
         const n = arr.indexOf('x')
         const p = arr[n - 1] * arr[n + 1]
-        newArr = arr.slice(0, n-1).concat(p.toString(),...arr.slice(n+2, arr.length))
+        newArr = arr.slice(0, n-1).concat(p.toPrecision(12).toString(),...arr.slice(n+2, arr.length))
       } else {
         const n = arr.indexOf('÷')
         const p = arr[n - 1] / arr[n + 1]
-        newArr = arr.slice(0, n-1).concat(p.toString(), ...arr.slice(n + 2, arr.length))
+        newArr = arr.slice(0, n-1).concat(p.toPrecision(12).toString(), ...arr.slice(n + 2, arr.length))
       }
     } else {
       if (arr.indexOf('x') > 0) {
         const n = arr.indexOf('x')
         const p = arr[n - 1] * arr[n + 1]
-        newArr = arr.slice(0, n-1).concat(p.toString(),...arr.slice(n+2, arr.length))
+        newArr = arr.slice(0, n-1).concat(p.toPrecision(12).toString(),...arr.slice(n+2, arr.length))
       } else {
         const n = arr.indexOf('÷')
         const p = arr[n - 1] / arr[n + 1]
-        newArr = arr.slice(0, n-1).concat(p.toString(), ...arr.slice(n + 2, arr.length))
+        newArr = arr.slice(0, n-1).concat(p.toPrecision(12).toString(), ...arr.slice(n + 2, arr.length))
       }
     }
     return multDiv(newArr)
