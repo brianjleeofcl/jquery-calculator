@@ -3,9 +3,21 @@
 
   const $screen = $('#screen')
 
-  // $('#screen').on('submit', () => {
-  //
-  // })
+  $('body').on('keydown', () => {
+    if (event.key === 'Escape'){
+      $screen.val("");
+      return;
+    }
+    if (event.key === 'Enter'){
+      const answer = calculate($screen.val());
+      if (Number.isNaN(answer)){
+        $screen.val("error!")
+      } else {
+        $screen.val(answer.toString());
+      }
+      return;
+    }
+  })
 
   $('.buttons').on('click', 'span', () => {
     if($(event.target).attr('id') === 'clear') {
