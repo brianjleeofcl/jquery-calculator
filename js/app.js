@@ -36,7 +36,6 @@
       } else {
         newArr = divide(arr);
       }
-    }
 
     return multDiv(newArr);
   };
